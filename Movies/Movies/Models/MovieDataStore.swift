@@ -9,51 +9,51 @@ import Foundation
 
 @Observable
 class MovieDataStore {
-     var movies = [Movie]
+    private var movies = Movies()
     
     init(){
-        movies = [Movie]()
+        movies.movies = [Movie]()
     }
     
     func getMovies() -> [Movie] {
-        return movies 
+        return movies.movies
     }
     
-   func getMovies(actor: Actor) -> [Movie] {
-    let filteredMovies = movies.filter { movie in
-        return movie.actors.contains(actor)
+    func getMovies(actor: Actor) -> [Movie] {
+        let filteredMovies = movies.movies.filter { movie in
+            return movie.actors.contains(actor)
+        }
+        return filteredMovies
     }
-    return filteredMovies
-}
-
+    
     
     func getMovies(director: Director) -> [Movie] {
-    let filteredMovies = movies.filter { movie in
-        return movie.director == director
-    }
-    return filteredMovies
-}
-
-    
-   func getACtors(director: Director) -> [Actor] {
-    let filteredMovies = movies.filter { movie in
-        return movie.director == director
+        let filteredMovies = movies.movies.filter { movie in
+            return movie.director == director
+        }
+        return filteredMovies
     }
     
-    let allActors = filteredMovies.flatMap { movie in
-        movie.actors
+    
+    func getActors(director: Director) -> [Actor] {
+        let filteredMovies = movies.movies.filter { movie in
+            return movie.director == director
+        }
+        
+        let allActors = filteredMovies.flatMap { movie in
+            movie.actors
+        }
+        
+        let uniqueActors = Array(Set(allActors))
+        
+        return uniqueActors
     }
     
-    let uniqueActors = Array(Set(allActors))
-    
-    return uniqueActors
-}
-
     
     private func sort() {
-       movies.sort { m1, m2 in
-          m1.releaseDate < m2.releaseDate
-     }
+        movies.movies.sort { m1, m2 in
+            m1.releaseDate < m2.releaseDate
+        }
     }
     
     func loadData() async {
@@ -62,18 +62,18 @@ class MovieDataStore {
             print("⏳ Simulating 2-second load delay...")
             try await Task.sleep(for: .seconds(2)) // Simulate long load
             // load movies
-            let data: [MovieJson] = try load("movies.json")
-             movies = data.map({ movieJson in
-               movieJson.toMovie()
-               })
+            let data: [Movie] = load("movies.json")
+            movies.movies = data
+            
             // sort
-             sort()
+            sort()
             print("✅ Data loaded successfully.")
             
         } catch {
             print("❌ Failed to load uurrooster:", error)
             //movies is lege array
-             movies = [Movie]()
+            movies.movies = [Movie]()
         }
     }
-
+    
+}

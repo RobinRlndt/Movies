@@ -1,0 +1,45 @@
+//
+//  MovieListView.swift
+//  Movies
+//
+//  Created by Robin Roelandt on 02/12/2025.
+//
+
+import SwiftUI
+
+struct MovieListView: View {
+    @Environment(MovieDataStore.self) var movieDataStore
+    @State private var pathStore = PathStore()
+    @State var loading = true
+    
+    var body: some View {
+        NavigationStack(path: $pathStore.path) {
+            if loading {
+                ProgressView("Loading...")
+            } else {
+                List(movieDataStore.getMovies(), id: \.self) { movie in
+                    NavigationLink(value: Destination.movie(movie)) {
+                        VStack(alignment: .leading) {
+                            Text(movie.title)
+                                .font(.headline)
+                            Text(movie.description)
+                                .font(.caption)
+                        }
+                    }
+                }
+                .navigationTitle("Movies")
+                .task {
+                    await movieDataStore.loadData()
+                    loading = false
+                }
+            }
+        }
+        
+    }
+    
+}
+
+        
+ 
+
+
