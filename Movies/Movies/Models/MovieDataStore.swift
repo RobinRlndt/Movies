@@ -9,14 +9,11 @@ import Foundation
 
 @Observable
 class MovieDataStore {
-    private var movies = Movies()
+    var movies: [Movie] = []
     
-    init(){
-        movies.movies = [Movie]()
-    }
     
     func getMovies() -> [Movie] {
-        return movies.movies
+        return movies
     }
     
     func getMovies(actor: Actor) -> [Movie] {
@@ -50,29 +47,24 @@ class MovieDataStore {
     }
     
     
-    private func sort() {
-        movies.movies.sort { m1, m2 in
-            m1.releaseDate < m2.releaseDate
-        }
+      private func sort() {
+        movies.sort { $0.releaseDate < $1.releaseDate }
     }
     
     func loadData() async {
-        //simulate async call
         do {
             print("⏳ Simulating 2-second load delay...")
-            try await Task.sleep(for: .seconds(2)) // Simulate long load
-            // load movies
-            let data: [Movie] = load("movies.json")
-            movies.movies = data
+            try await Task.sleep(for: .seconds(2))
             
-            // sort
+            // Assumes load("movies.json") returns [Movie] directly
+            let data: [Movie] = load("movies.json")
+            movies = data
             sort()
-            print("✅ Data loaded successfully.")
+            print("✅ Data loaded successfully (\(movies.count) movies).")
             
         } catch {
-            print("❌ Failed to load uurrooster:", error)
-            //movies is lege array
-            movies.movies = [Movie]()
+            print("❌ Failed to load movies: \(error)")
+            movies = []
         }
     }
     
