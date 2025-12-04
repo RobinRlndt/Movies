@@ -17,7 +17,7 @@ class MovieDataStore {
     }
     
     func getMovies(actor: Actor) -> [Movie] {
-        let filteredMovies = movies.movies.filter { movie in
+        let filteredMovies = movies.filter { movie in
             return movie.actors.contains(actor)
         }
         return filteredMovies
@@ -25,7 +25,7 @@ class MovieDataStore {
     
     
     func getMovies(director: Director) -> [Movie] {
-        let filteredMovies = movies.movies.filter { movie in
+        let filteredMovies = movies.filter { movie in
             return movie.director == director
         }
         return filteredMovies
@@ -33,7 +33,7 @@ class MovieDataStore {
     
     
     func getActors(director: Director) -> [Actor] {
-        let filteredMovies = movies.movies.filter { movie in
+        let filteredMovies = movies.filter { movie in
             return movie.director == director
         }
         
@@ -56,9 +56,12 @@ class MovieDataStore {
             print("⏳ Simulating 2-second load delay...")
             try await Task.sleep(for: .seconds(2))
             
-            // Assumes load("movies.json") returns [Movie] directly
-            let data: [Movie] = load("movies.json")
-            movies = data
+            // Decode the JSON as Movies wrapper
+            let dataWrapper: Movies = load("movies.json")
+            
+            // Extract movies array from wrapper
+            movies = dataWrapper.movies
+            
             sort()
             print("✅ Data loaded successfully (\(movies.count) movies).")
             
@@ -67,5 +70,6 @@ class MovieDataStore {
             movies = []
         }
     }
+
     
 }

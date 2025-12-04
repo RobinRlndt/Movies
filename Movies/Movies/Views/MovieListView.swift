@@ -16,6 +16,7 @@ struct MovieListView: View {
         NavigationStack(path: $pathStore.path) {
             if loading {
                 ProgressView("Loading...")
+                    .navigationTitle("Movies")
             } else {
                 List(movieDataStore.getMovies(), id: \.self) { movie in
                     NavigationLink(value: Destination.movie(movie)) {
@@ -24,20 +25,26 @@ struct MovieListView: View {
                                 .font(.headline)
                             Text(movie.description)
                                 .font(.caption)
+                            Divider()
                         }
                     }
+                    
                 }
                 .navigationTitle("Movies")
-                .task {
-                    await movieDataStore.loadData()
-                    loading = false
+                .navigationDestination(for: Destination.self) { destination in
+                    PathView(destination: destination)
                 }
             }
         }
-        
+        .task {
+            await movieDataStore.loadData()
+            loading = false
+        }
     }
-    
 }
+
+
+
 
         
  

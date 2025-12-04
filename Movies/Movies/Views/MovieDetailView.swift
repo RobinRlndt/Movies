@@ -12,14 +12,15 @@ struct MovieDetailView: View {
     
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .center, spacing: 16) {
                 Text(movie.title)
                     .font(.title)
                     .bold()
-                
                 Text(movie.description)
                     .font(.body)
                     .foregroundStyle(.secondary)
+                
+                Divider()
                 
                 if !movie.actors.isEmpty {
                     Text("Actors")
@@ -27,11 +28,35 @@ struct MovieDetailView: View {
                         .padding(.top)
                     
                     ForEach(movie.actors, id: \.self) { actor in
-                        Text("\(actor.firstName) \(actor.lastName)")
-                            .font(.subheadline)
-                            .padding(.vertical, 2)
+                        NavigationLink(value: Destination.actor(actor)) {
+                            VStack {
+                                Text("\(actor.firstName) \(actor.lastName)")
+                            }.padding(.vertical, 4)
+                        }
                     }
                 }
+
+                Divider()
+                
+                if !movie.director.moviesDirected.isEmpty {
+                    Text("Director(s)")
+                        .font(.headline)
+                        .padding(.top)
+                    
+                    NavigationLink(value: Destination.director(movie.director)) {
+                        VStack {
+                            Text("\(movie.director.firstName) \(movie.director.lastName)")
+                            }
+                        }.padding(.vertical, 4)
+                    }
+                    
+                
+                Divider()
+                
+                    Text("Overview NavigationStack")
+                        .font(.headline)
+                        .padding(.top)
+
 
             }
             .padding()

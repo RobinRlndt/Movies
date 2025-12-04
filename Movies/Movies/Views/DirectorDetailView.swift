@@ -8,10 +8,58 @@
 import SwiftUI
 
 struct DirectorDetailView: View {
+    
+    @Environment(MovieDataStore.self) var movieDataStore
     let director: Director
     
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ScrollView {
+            Text("\(director.firstName) \(director.lastName)")
+                .font(.title)
+                .bold()
+            
+            Divider()
+        
+            
+            if !movieDataStore.getMovies(director: director).isEmpty {
+                Text("Movie(s)")
+                    .font(.headline)
+                    .padding(.top)
+                
+                ForEach(movieDataStore.getMovies(director: director), id: \.self) { movie in
+                    NavigationLink(value: Destination.movie(movie)) {
+                        VStack {
+                            Text("\(movie.title)")
+                        }.padding(.vertical, 4)
+                    }
+                }
+            }
+            
+            Divider()
+        
+            
+            if !movieDataStore.getActors(director: director).isEmpty {
+                Text("Director works with:")
+                    .padding(.top)
+                
+                ForEach(movieDataStore.getActors(director: director), id: \.self) { actor in
+                    NavigationLink(value: Destination.actor(actor)) {
+                        VStack {
+                            Text("\(actor.firstName) \(actor.firstName)")
+                        }.padding(.vertical, 4)
+                    }
+                }
+            }
+            
+            Divider()
+            Text("Overview NavigationStack")
+                .font(.headline)
+                .padding(.top)
+            
+            
+
+            
+        }.navigationTitle("Director: \(director.firstName) \(director.lastName)")
     }
 }
 

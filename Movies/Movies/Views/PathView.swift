@@ -8,16 +8,10 @@
 import SwiftUI
 
 struct PathView: View {
-    @Environment(PathStore.self) var pathStore
+    let destination: Destination
     
     var body: some View {
-        NavigationStack(path: $pathStore.path) {
-            List {
-                ForEach(Array(pathStore.path.enumerated()), id: \.element) { index, destination in
-                    Text("Step \(index + 1): \(destination.description)")
-                }
-            }
-            .navigationDestination(for: Destination.self) { destination in
+        Group {
                 switch destination {
                 case let .actor(actor):
                     ActorDetailView(actor: actor)
@@ -27,9 +21,7 @@ struct PathView: View {
                     MovieDetailView(movie: movie)
                 }
             }
-            .navigationTitle("Home")
-            .padding()
         }
     }
-}
+
 
