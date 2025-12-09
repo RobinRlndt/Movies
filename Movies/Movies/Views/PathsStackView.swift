@@ -8,32 +8,33 @@
 import SwiftUI
 
 struct PathsStackView: View {
-    @Environment(Paths.self) var paths
+    @Environment(PathStore.self) var pathStore
     
     var body: some View {
-        Text("Overview NavigationStack")
-            .font(.headline)
-            .padding(.top)
-        
-        if !paths.path.isEmpty {
+        VStack(alignment: .leading) {
+            Text("Navigation Path")
+                .font(.headline)
+                .padding(.top)
+            
+            if pathStore.path.isEmpty {
                 Text("Empty")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             } else {
-                ForEach(Array(pathStore.path.enumerated()), id: \.offset) { index, destination in
+                ForEach(Array(pathStore.path.enumerated()), id: \.element) { index, destination in
                     HStack {
-                        Text("\(index): ")
-                            .font(.caption)
-                        Text(destination.debugDescription)
-                            .font(.caption.monospaced())
-                            .foregroundStyle(.secondary)
+                    switch destination {
+                            case .movie(let movie):
+                            Text(movie.title)
+                            case .actor(let actor):
+                            Text("\(actor.firstName) \(actor.lastName)")
+                            case .director(let director):
+                            Text("\(director.firstName) \(director.lastName)")
+                        }
                     }
-                    .padding(.horizontal)
                 }
             }
+        }
     }
 }
 
-#Preview {
-    PathsStackView()
-}

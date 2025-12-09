@@ -9,11 +9,13 @@ import SwiftUI
 
 struct MovieListView: View {
     @Environment(MovieDataStore.self) var movieDataStore
-    @State private var pathStore = PathStore()
+    @Environment(PathStore.self) var pathStore
     @State var loading = true
     
     var body: some View {
-        NavigationStack(path: $pathStore.path) {
+        @Bindable var pathBinding = pathStore
+        
+        NavigationStack(path: $pathBinding.path) { 
             if loading {
                 ProgressView("Loading...")
                     .navigationTitle("Movies")
@@ -28,7 +30,6 @@ struct MovieListView: View {
                             Divider()
                         }
                     }
-                    
                 }
                 .navigationTitle("Movies")
                 .navigationDestination(for: Destination.self) { destination in
@@ -42,6 +43,7 @@ struct MovieListView: View {
         }
     }
 }
+
 
 
 

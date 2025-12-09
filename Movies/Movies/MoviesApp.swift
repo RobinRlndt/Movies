@@ -10,13 +10,13 @@ import SwiftUI
 @main
 struct MoviesApp: App {
     @State private var movieDataStore = MovieDataStore()
-    @State private var paths = Paths()
+    @State private var pathStore = PathStore()
     
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environment(movieDataStore)
-                .environment(paths)
+                .environment(pathStore)
             
         }
     }

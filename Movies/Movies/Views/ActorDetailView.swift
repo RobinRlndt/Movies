@@ -38,8 +38,6 @@ struct ActorDetailView: View {
             }
             
             Divider()
-          
-            
             
 
             

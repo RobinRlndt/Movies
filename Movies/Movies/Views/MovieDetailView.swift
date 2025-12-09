@@ -53,9 +53,6 @@ struct MovieDetailView: View {
                 
                 Divider()
                 
-                    Text("Overview NavigationStack")
-                        .font(.headline)
-                        .padding(.top)
 
 
             }
